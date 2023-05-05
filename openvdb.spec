@@ -99,21 +99,25 @@ Python interface to OpenVDB library.
 Interfejs Pythona do biblioteki OpenVDB.
 
 %package apidocs
-Summary:	API documentation for %{name} library
-Summary(pl.UTF-8):	Dokumentacja API biblioteki %{name}
+Summary:	API documentation for OpenVDB library
+Summary(pl.UTF-8):	Dokumentacja API biblioteki OpenVDB
 Group:		Documentation
 BuildArch:	noarch
 
 %description apidocs
-API documentation for %{name} library.
+API documentation for OpenVDB library.
 
 %description apidocs -l pl.UTF-8
-Dokumentacja API biblioteki %{name}.
+Dokumentacja API biblioteki OpenVDB.
 
 %prep
 %setup -q
 
 %build
+%ifarch %{ix86} x32
+# with default settings g++ fails with virtual memory exhausted on 32-bit x86 systems
+CXXFLAGS="%{rpmcxxflags} --param ggc-min-expand=20 --param ggc-min-heapsize=65536"
+%endif
 %cmake -B build \
 	-DCMAKE_INSTALL_DOCDIR=%{_docdir}/openvdb \
 	%{?with_llvm:-DOPENVDB_BUILD_AX=ON} \
