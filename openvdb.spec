@@ -11,7 +11,7 @@ Summary:	C++ library for sparse volumetric data discretized on three-dimensional
 Summary(pl.UTF-8):	Biblioteka C++ do rzadkich danych wolumetrycznych dyskretyzowanych na siatkach trójwymiarowych
 Name:		openvdb
 Version:	10.0.1
-Release:	2
+Release:	3
 License:	MPL v2.0
 Group:		Libraries
 #Source0Download: https://github.com/AcademySoftwareFoundation/openvdb/releases
