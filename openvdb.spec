@@ -10,22 +10,22 @@
 Summary:	C++ library for sparse volumetric data discretized on three-dimensional grids
 Summary(pl.UTF-8):	Biblioteka C++ do rzadkich danych wolumetrycznych dyskretyzowanych na siatkach trójwymiarowych
 Name:		openvdb
-Version:	10.0.1
-Release:	4
+Version:	11.0.0
+Release:	1
 License:	MPL v2.0
 Group:		Libraries
 #Source0Download: https://github.com/AcademySoftwareFoundation/openvdb/releases
 Source0:	https://github.com/AcademySoftwareFoundation/openvdb/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	0239ff0c912a3eac76bd6a4ae1b03522
+# Source0-md5:	025f4fc4db58419341a4991f1a16174a
 URL:		https://www.openvdb.org/
-BuildRequires:	Imath-devel >= 2.4
-BuildRequires:	OpenEXR-devel >= 2.4
+BuildRequires:	Imath-devel >= 3.1
+BuildRequires:	OpenEXR-devel >= 3.1
 BuildRequires:	boost-devel >= 1.73
 BuildRequires:	c-blosc-devel >= 1.17.0
 BuildRequires:	cmake >= 3.18
 %{?with_apidocs:BuildRequires:	doxygen >= 1.8.8}
 %{?with_apidocs:BuildRequires:	ghostscript}
-BuildRequires:	glfw-devel >= 3.1
+BuildRequires:	glfw-devel >= 3.2
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel >= 6:9.3.1
 %if %{with llvm}
@@ -33,8 +33,10 @@ BuildRequires:	llvm-devel >= 10.0.0
 BuildRequires:	llvm-devel < 15
 %endif
 BuildRequires:	log4cplus-devel >= 1.1.2
-BuildRequires:	python3-devel >= 1:3.7
-BuildRequires:	python3-numpy-devel >= 1.19.0
+BuildRequires:	pkgconfig
+BuildRequires:	python3-devel >= 1:3.9.1
+BuildRequires:	python3-numpy-devel >= 1.20.0
+BuildRequires:	python3-pybind11 >= 2.9.1
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.605
 BuildRequires:	tbb-devel >= 2020.2
@@ -67,8 +69,8 @@ Summary:	Header files for OpenVDB library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki OpenVDB
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	Imath-devel >= 2.4
-Requires:	OpenEXR-devel >= 2.4
+Requires:	Imath-devel >= 3.1
+Requires:	OpenEXR-devel >= 3.1
 Requires:	boost-devel >= 1.73
 Requires:	libstdc++-devel >= 6:9.3.1
 Requires:	tbb-devel >= 2020.2
@@ -162,7 +164,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/nanovdb_validate
 %attr(755,root,root) %{_bindir}/vdb_print
 %attr(755,root,root) %{_libdir}/libopenvdb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libopenvdb.so.10.0
+%attr(755,root,root) %ghost %{_libdir}/libopenvdb.so.11.0
 
 %files devel
 %defattr(644,root,root,755)
@@ -179,7 +181,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n python3-pyopenvdb
 %defattr(644,root,root,755)
-%attr(755,root,root) %{py3_sitedir}/pyopenvdb.so
+%attr(755,root,root) %{py3_sitedir}/pyopenvdb.cpython-*.so
 
 %if %{with apidocs}
 %files apidocs
