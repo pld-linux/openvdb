@@ -6,19 +6,20 @@
 %bcond_without	static_libs	# static libraries
 %bcond_with	avx		# AVX x86 SIMD instructions
 %bcond_with	sse4		# SSE4.2 x86 SIMD instructions
+%bcond_with	python3	# CPython 3.x binding
 
 Summary:	C++ library for sparse volumetric data discretized on three-dimensional grids
 Summary(pl.UTF-8):	Biblioteka C++ do rzadkich danych wolumetrycznych dyskretyzowanych na siatkach trójwymiarowych
 Name:		openvdb
-Version:	11.0.0
-Release:	6
+Version:	13.0.0
+Release:	1
 License:	MPL v2.0
 Group:		Libraries
 #Source0Download: https://github.com/AcademySoftwareFoundation/openvdb/releases
 Source0:	https://github.com/AcademySoftwareFoundation/openvdb/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	025f4fc4db58419341a4991f1a16174a
+# Source0-md5:	7a10f529ed12d9e3ed6d3fd50f157378
 URL:		https://www.openvdb.org/
-BuildRequires:	Imath-devel >= 3.1
+BuildRequires:	Imath-devel >= 3.2
 BuildRequires:	OpenEXR-devel >= 3.1
 BuildRequires:	boost-devel >= 1.73
 BuildRequires:	c-blosc-devel >= 1.17.0
@@ -34,9 +35,11 @@ BuildRequires:	llvm-devel < 15
 %endif
 BuildRequires:	log4cplus-devel >= 1.1.2
 BuildRequires:	pkgconfig
+%if %{with python3}
 BuildRequires:	python3-devel >= 1:3.9.1
 BuildRequires:	python3-numpy-devel >= 1.20.0
 BuildRequires:	python3-pybind11 >= 2.9.1
+%endif
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.605
 BuildRequires:	tbb-devel >= 2020.2
@@ -96,7 +99,7 @@ Statyczna biblioteka OpenVDB.
 %package -n python3-pyopenvdb
 Summary:	Python interface to OpenVDB library
 Summary(pl.UTF-8):	Interfejs Pythona do biblioteki OpenVDB
-Group:		Python/Libraries
+Group:		Libraries/Python
 Requires:	%{name} = %{version}-%{release}
 
 %description -n python3-pyopenvdb
@@ -130,7 +133,7 @@ CXXFLAGS="%{rpmcxxflags} --param ggc-min-expand=20 --param ggc-min-heapsize=6553
 	%{?with_llvm:-DOPENVDB_BUILD_AX=ON} \
 	%{?with_apidocs:-DOPENVDB_BUILD_DOCS=ON} \
 	-DOPENVDB_BUILD_NANOVDB=ON \
-	-DOPENVDB_BUILD_PYTHON_MODULE=ON \
+	%{cmake_on_off python3 OPENVDB_BUILD_PYTHON_MODULE} \
 	-DOPENVDB_ENABLE_RPATH=OFF \
 %if %{with avx}
 	-DOPENVDB_SIMD=AVX \
@@ -163,12 +166,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/nanovdb_print
 %attr(755,root,root) %{_bindir}/nanovdb_validate
 %attr(755,root,root) %{_bindir}/vdb_print
-%attr(755,root,root) %{_libdir}/libopenvdb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libopenvdb.so.11.0
+%{_libdir}/libopenvdb.so.*.*.*
+%ghost %{_libdir}/libopenvdb.so.13.0
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libopenvdb.so
+%{_libdir}/libopenvdb.so
 %{_includedir}/nanovdb
 %{_includedir}/openvdb
 %{_libdir}/cmake/OpenVDB
@@ -179,9 +182,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libopenvdb.a
 %endif
 
+%if %{with python3}
 %files -n python3-pyopenvdb
 %defattr(644,root,root,755)
 %attr(755,root,root) %{py3_sitedir}/pyopenvdb.cpython-*.so
+%endif
 
 %if %{with apidocs}
 %files apidocs
